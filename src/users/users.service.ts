@@ -47,13 +47,13 @@ export class UsersService {
       throw new ConflictException("Email already exists");
     }
 
-    const phoneExists = await this.prisma.user.findFirst({
-      where: { phone: createUserDto.phone },
-    });
+    // const phoneExists = await this.prisma.user.findFirst({
+    //   where: { phone: createUserDto.phone },
+    // });
 
-    if (phoneExists) {
-      throw new ConflictException("Phone already exists");
-    }
+    // if (phoneExists) {
+    //   throw new ConflictException("Phone already exists");
+    // }
 
     const usernameExists = await this.prisma.user.findUnique({
       select: {

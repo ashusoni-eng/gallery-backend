@@ -54,4 +54,8 @@ export class GalleryService {
   remove(id: string) {
     return this.prisma.gallery.delete({ where: { id } });
   }
+
+  async countAllImages(): Promise<number> {
+    return this.prisma.gallery.count();
+  }
 }

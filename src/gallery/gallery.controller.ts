@@ -90,6 +90,11 @@ export class GalleryController {
     return this.galleryService.findAll(categoryId);
   }
 
+  @Get("count")
+  countAllImages() {
+    return this.galleryService.countAllImages();
+  }
+
   @Get(":id")
   findOne(@Param(":id") id: string) {
     return this.galleryService.findOne(id);
