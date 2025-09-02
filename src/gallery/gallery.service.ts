@@ -31,13 +31,53 @@ export class GalleryService {
         user: {
           select: { fullName: true },
         },
+        category: {
+          select: { categoryName: true, description: true },
+        },
       },
     });
     return gallery.map(item => ({
       ...item,
       url: `${baseUrl}/${item.path}`,
       uploadedByName: item.user.fullName,
+      categoryName: item.category?.categoryName || 'N/A',
+      categoryDescription: item.category?.description || 'N/A',
     }));
+  }
+
+  async findAllPaginated(page: number, limit: number) {
+    const baseUrl = this.configService.get<string>('APP_BASE_URL');
+    const skip = (page - 1) * limit;
+    const gallery = await this.prisma.gallery.findMany({
+      skip,
+      take: limit,
+      include: {
+        user: {
+          select: { fullName: true },
+        },
+        category: {
+          select: { categoryName: true, description: true },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    const total = await this.prisma.gallery.count();
+
+    return {
+      data: gallery.map(item => ({
+        ...item,
+        url: `${baseUrl}/${item.path}`,
+        uploadedByName: item.user.fullName,
+        categoryName: item.category?.categoryName || 'N/A',
+        categoryDescription: item.category?.description || 'N/A',
+      })),
+      total,
+      page,
+      lastPage: Math.ceil(total / limit),
+    };
   }
 
   findOne(id: string) {
